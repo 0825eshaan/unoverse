@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino Practice Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .tab:hover {
+            background: #ecf0f1;
+        }
+
+        .tab.active:hover {
+            background: #2980b9;
+        }
+
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .lesson-card {
+            background: #3498db;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .code-input {
+            width: 100%;
+            height: 200px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            border: none;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #2980b9;
+        }
+
+        .result {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .quiz-question {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .quiz-option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .quiz-option:hover {
+            background: #f0f4ff;
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+        }
+
+        .quiz-option.incorrect {
+            background: #f8d7da;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.5s;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Arduino Practice Hub</h1>
+            <p>Learn Arduino programming through interactive lessons</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('basics')">Basics</button>
+            <button class="tab" onclick="showTab('examples')">Examples</button>
+            <button class="tab" onclick="showTab('practice')">Practice</button>
+            <button class="tab" onclick="showTab('quiz')">Quiz</button>
+        </div>
+
+        <div class="content">
+            <!-- Basics Tab -->
+            <div id="basics" class="tab-content active">
+                <h2>Arduino Fundamentals</h2>
+                
+                <div class="lesson-grid">
+                    <div class="lesson-card" onclick="showLesson('setup')">
+                        <h3>Setup & Loop</h3>
+                        <p>Basic Arduino structure</p>
+                    </div>
+                    <div class="lesson-card" onclick="showLesson('digital')">
+                        <h3>Digital I/O</h3>
+                        <p>Control LEDs and buttons</p>
+                    </div>
+                    <div class="lesson-card" onclick="showLesson('analog')">
+                        <h3>Analog I/O</h3>
+                        <p>Read sensors and PWM</p>
+                    </div>
+                    <div class="lesson-card" onclick="showLesson('serial')">
+                        <h3>Serial</h3>
+                        <p>Communication and debugging</p>
+                    </div>
+                </div>
+
+                <div id="lesson-content">
+                    <div id="setup-lesson" style="display: none;">
+                        <h3>Setup & Loop Structure</h3>
+                        <p>Every Arduino program has these two functions:</p>
+                        <div class="code-block">void setup() {
+  // Runs once at startup
+}
+
+void loop() {
+  // Runs repeatedly forever
+}</div>
+                    </div>
+
+                    <div id="digital-lesson" style="display: none;">
+                        <h3>Digital Input/Output</h3>
+                        <div class="code-block">pinMode(13, OUTPUT);        // Set pin as output
+digitalWrite(13, HIGH);     // Turn on (5V)
+digitalWrite(13, LOW);      // Turn off (0V)
+int state = digitalRead(2); // Read pin state</div>
+                    </div>
+
+                    <div id="analog-lesson" style="display: none;">
+                        <h3>Analog Input/Output</h3>
+                        <div class="code-block">int value = analogRead(A0);  // Read 0-1023
+analogWrite(9, 128);         // PWM output 0-255</div>
+                    </div>
+
+                    <div id="serial-lesson" style="display: none;">
+                        <h3>Serial Communication</h3>
+                        <div class="code-block">Serial.begin(9600);    // Start serial
+Serial.println("Hello");  // Print with newline
+Serial.print(value);      // Print without newline</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Examples Tab -->
+            <div id="examples" class="tab-content">
+                <h2>Code Examples</h2>
+                
+                <div class="lesson-grid">
+                    <div class="lesson-card" onclick="showExample('blink')">
+                        <h3>Blink LED</h3>
+                        <p>Basic LED control</p>
+                    </div>
+                    <div class="lesson-card" onclick="showExample('button')">
+                        <h3>Button Control</h3>
+                        <p>Read button input</p>
+                    </div>
+                    <div class="lesson-card" onclick="showExample('fade')">
+                        <h3>Fade LED</h3>
+                        <p>PWM brightness control</p>
+                    </div>
+                    <div class="lesson-card" onclick="showExample('sensor')">
+                        <h3>Read Sensor</h3>
+                        <p>Analog sensor reading</p>
+                    </div>
+                </div>
+
+                <div id="example-content"></div>
+            </div>
+
+            <!-- Practice Tab -->
+            <div id="practice" class="tab-content">
+                <h2>Practice Exercises</h2>
+                
+                <div id="exercise-info">
+                    <h3 id="exercise-title">Exercise 1: Blink LED</h3>
+                    <p id="exercise-desc">Make the built-in LED (pin 13) blink every 500ms</p>
+                </div>
+                
+                <textarea class="code-input" id="user-code" placeholder="Write your Arduino code here..."></textarea>
+                
+                <button class="button" onclick="checkCode()">Check Code</button>
+                <button class="button" onclick="showHint()">Show Hint</button>
+                <button class="button" onclick="nextExercise()">Next Exercise</button>
+                
+                <div id="feedback" class="result" style="display: none;"></div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div id="quiz" class="tab-content">
+                <h2>Knowledge Quiz</h2>
+                <div id="quiz-container"></div>
+                <div id="quiz-score"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentExercise = 0;
+        let currentLesson = '';
+
+        const exercises = [
+            {
+                title: "Exercise 1: Blink LED",
+                desc: "Make the built-in LED (pin 13) blink every 500ms",
+                hint: "Use pinMode(), digitalWrite(), and delay()",
+                keywords: ["pinMode", "digitalWrite", "delay", "13"]
+            },
+            {
+                title: "Exercise 2: Button Control",
+                desc: "Turn LED on when button (pin 2) is pressed",
+                hint: "Use INPUT_PULLUP and check for LOW state",
+                keywords: ["pinMode", "digitalRead", "INPUT_PULLUP"]
+            },
+            {
+                title: "Exercise 3: Sensor Reading",
+                desc: "Read analog sensor on A0 and print to serial",
+                hint: "Use Serial.begin(), analogRead(), and Serial.println()",
+                keywords: ["Serial.begin", "analogRead", "Serial.println"]
+            }
+        ];
+
+        const quizData = [
+            {
+                question: "Which function runs only once?",
+                options: ["loop()", "setup()", "begin()", "start()"],
+                correct: 1
+            },
+            {
+                question: "analogRead() returns values from:",
+                options: ["0-255", "0-1023", "0-5", "0-100"],
+                correct: 1
+            },
+            {
+                question: "Built-in LED is on pin:",
+                options: ["12", "13", "14", "A0"],
+                correct: 1
+            }
+        ];
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'quiz') loadQuiz();
+        }
+
+        function showLesson(lessonName) {
+            // Hide all lessons
+            document.querySelectorAll('[id$="-lesson"]').forEach(lesson => {
+                lesson.style.display = 'none';
+            });
+            
+            // Show selected lesson
+            document.getElementById(lessonName + '-lesson').style.display = 'block';
+            currentLesson = lessonName;
+        }
+
+        function showExample(exampleType) {
+            const examples = {
+                blink: {
+                    title: "Blink LED",
+                    code: `void setup() {
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(13, HIGH);
+  delay(1000);
+  digitalWrite(13, LOW);
+  delay(1000);
+}`
+                },
+                button: {
+                    title: "Button Control",
+                    code: `void setup() {
+  pinMode(13, OUTPUT);
+  pinMode(2, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(2) == LOW) {
+    digitalWrite(13, HIGH);
+  } else {
+    digitalWrite(13, LOW);
+  }
+}`
+                },
+                fade: {
+                    title: "Fade LED",
+                    code: `int brightness = 0;
+int fadeAmount = 5;
+
+void setup() {
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  analogWrite(9, brightness);
+  brightness += fadeAmount;
+  
+  if (brightness <= 0 || brightness >= 255) {
+    fadeAmount = -fadeAmount;
+  }
+  delay(30);
+}`
+                },
+                sensor: {
+                    title: "Read Sensor",
+                    code: `void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(A0);
+  Serial.println(value);
+  delay(500);
+}`
+                }
+            };
+
+            const example = examples[exampleType];
+            document.getElementById('example-content').innerHTML = `
+                <h3>${example.title}</h3>
+                <div class="code-block">${example.code}</div>
+            `;
+        }
+
+        function checkCode() {
+            const code = document.getElementById('user-code').value;
+            const exercise = exercises[currentExercise];
+            const feedback = document.getElementById('feedback');
+            
+            if (!code.trim()) {
+                feedback.innerHTML = "Please write some code first!";
+                feedback.style.display = 'block';
+                return;
+            }
+
+            let score = 0;
+            let missing = [];
+
+            exercise.keywords.forEach(keyword => {
+                if (code.includes(keyword)) {
+                    score += 25;
+                } else {
+                    missing.push(keyword);
+                }
+            });
+
+            if (score >= 75) {
+                feedback.innerHTML = "✅ Great! Your code looks correct!";
+                updateProgress();
+            } else {
+                feedback.innerHTML = `❌ Missing: ${missing.join(', ')}`;
+            }
+
+            feedback.style.display = 'block';
+        }
+
+        function showHint() {
+            const hint = exercises[currentExercise].hint;
+            const feedback = document.getElementById('feedback');
+            feedback.innerHTML = `💡 Hint: ${hint}`;
+            feedback.style.display = 'block';
+        }
+
+        function nextExercise() {
+            if (currentExercise < exercises.length - 1) {
+                currentExercise++;
+                loadExercise();
+            } else {
+                alert("All exercises completed!");
+            }
+        }
+
+        function loadExercise() {
+            const exercise = exercises[currentExercise];
+            document.getElementById('exercise-title').textContent = exercise.title;
+            document.getElementById('exercise-desc').textContent = exercise.desc;
+            document.getElementById('user-code').value = '';
+            document.getElementById('feedback').style.display = 'none';
+        }
+
+        function updateProgress() {
+            const progress = ((currentExercise + 1) / exercises.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function loadQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            quizData.forEach((q, i) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-question';
+                div.innerHTML = `
+                    <h4>Question ${i + 1}: ${q.question}</h4>
+                    ${q.options.map((option, j) => 
+                        `<div class="quiz-option" onclick="selectAnswer(${i}, ${j})">${option}</div>`
+                    ).join('')}
+                `;
+                container.appendChild(div);
+            });
+
+            const btn = document.createElement('button');
+            btn.className = 'button';
+            btn.textContent = 'Submit Quiz';
+            btn.onclick = submitQuiz;
+            container.appendChild(btn);
+        }
+
+        let selectedAnswers = {};
+
+        function selectAnswer(questionIndex, answerIndex) {
+            selectedAnswers[questionIndex] = answerIndex;
+            
+            // Visual feedback
+            const options = document.querySelectorAll('.quiz-question')[questionIndex]
+                .querySelectorAll('.quiz-option');
+            options.forEach((option, i) => {
+                option.style.background = i === answerIndex ? '#e3f2fd' : 'white';
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            
+            quizData.forEach((q, i) => {
+                const userAnswer = selectedAnswers[i];
+                const options = document.querySelectorAll('.quiz-question')[i]
+                    .querySelectorAll('.quiz-option');
+                
+                options.forEach((option, j) => {
+                    if (j === q.correct) {
+                        option.classList.add('correct');
+                    } else if (j === userAnswer && j !== q.correct) {
+                        option.classList.add('incorrect');
+                    }
+                });
+
+                if (userAnswer === q.correct) score++;
+            });
+
+            document.getElementById('quiz-score').innerHTML = 
+                `<h3>Score: ${score}/${quizData.length}</h3>`;
+        }
+    </script>
+</body>
+</html>
